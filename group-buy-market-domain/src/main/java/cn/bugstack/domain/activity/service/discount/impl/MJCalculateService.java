@@ -5,6 +5,7 @@ import cn.bugstack.domain.activity.service.discount.AbstractDiscountCalculateSer
 import cn.bugstack.domain.activity.service.discount.IDiscountCalculateService;
 import cn.bugstack.types.common.Constants;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -24,6 +25,11 @@ public class MJCalculateService extends AbstractDiscountCalculateService {
 
         // 折扣表达式 - 100,10 满100减10元
         String marketExpr = groupBuyDiscount.getMarketExpr();
+        log.info("满减优惠计算：marketExpr={}", marketExpr);
+        if (StringUtils.isBlank(marketExpr)) {
+            log.error("满减优惠计算：marketExpr为空");
+            return originalPrice;
+        }
         String[] split = marketExpr.split(Constants.SPLIT);
         BigDecimal x = new BigDecimal(split[0].trim());
         BigDecimal y = new BigDecimal(split[1].trim());
