@@ -2,7 +2,6 @@ package cn.bugstack.infrastructure.adapter.port;
 
 import cn.bugstack.domain.trade.adapter.port.ITradePort;
 import cn.bugstack.domain.trade.model.entity.NotifyTaskEntity;
-import cn.bugstack.domain.trade.model.valobj.NotifyConfigVO;
 import cn.bugstack.domain.trade.model.valobj.NotifyTypeEnumVO;
 import cn.bugstack.infrastructure.event.EventPublisher;
 import cn.bugstack.infrastructure.gateway.GroupBuyNotifyService;

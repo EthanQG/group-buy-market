@@ -30,14 +30,14 @@ public class ActivityUsabilityRuleFilter implements ILogicHandler<TradeLockRuleC
     @Override
     public TradeLockRuleFilterBackEntity apply(TradeLockRuleCommandEntity requestParameter, TradeLockRuleFilterFactory.DynamicContext dynamicContext) throws Exception {
         log.info("交易规则过滤-活动的可用性校验{} activityId:{}", requestParameter.getUserId(), requestParameter.getActivityId());
-
+        // 1. 查询活动信息
         GroupBuyActivityEntity groupBuyActivity = repository.queryGroupBuyActivityEntityByActivityId(requestParameter.getActivityId());
 
-        //校验活动状态是否生效
+        //2.校验活动状态是否生效
         if(!groupBuyActivity.getStatus().equals(ActivityStatusEnumVO.EFFECTIVE)){
             throw new AppException(ResponseCode.E0101);
         }
-        //校验活动是否在有效期内
+        //3.校验活动是否在有效期内
         Date currentTime=new Date();
         log.info("交易规则过滤-活动的可用性校验{} activityId:{} currentTime:{} startTime:{} endTime:{}", requestParameter.getUserId(), requestParameter.getActivityId(), currentTime, groupBuyActivity.getStartTime(), groupBuyActivity.getEndTime());
         if (currentTime.before(groupBuyActivity.getStartTime()) || currentTime.after(groupBuyActivity.getEndTime())) {
@@ -45,6 +45,7 @@ public class ActivityUsabilityRuleFilter implements ILogicHandler<TradeLockRuleC
             throw new AppException(ResponseCode.E0102);
         }
 
+        // 4. 设置上下文并调用下一个过滤器
         dynamicContext.setGroupBuyActivity(groupBuyActivity);
 
         return next(requestParameter,dynamicContext);
